@@ -271,6 +271,7 @@ FEATURE_HOOKING             | OFF     | allow custom code to be hooked in the ou
 //#define USE_MCP9808
 //#define USE_MQ
 //#define USE_MHZ19
+//#define USE_SDS011
 //#define USE_AM2320
 //#define USE_TSL2561
 //#define USE_PT100
@@ -354,6 +355,7 @@ NodeManager node;
 //SensorMCP9808 mcp9808(node);
 //SensorMQ mq(node,A0);
 //SensorMHZ19 mhz19(node,6,7);
+//SensorSDS011 sds011(node,6,7);
 //SensorAM2320 am2320(node);
 //SensorTSL2561 tsl2561(node);
 //SensorPT100 pt100(node,6);

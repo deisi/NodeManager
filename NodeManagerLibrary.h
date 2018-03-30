@@ -191,6 +191,9 @@
 #ifdef USE_MHZ19
   #include <SoftwareSerial.h>
 #endif
+#ifdef USE_SDS011
+  #include <SDS011.h>
+#endif
 #ifdef USE_AM2320
   #include <Wire.h>
   #include <AM2320.h>
@@ -1336,6 +1339,29 @@ class SensorMHZ19: public Sensor {
     SoftwareSerial* _ser;
     int _tx_pin = 6;
     int _rx_pin = 7;
+};
+#endif
+
+/*
+   SensorSDS011
+*/
+#ifdef USE_SDS011
+class SensorSDS011: public Sensor {
+ public:
+  SensorSDS011(NodeManager& node_manager, int rxpin, int txpin, int child_id = -255);
+  // Sleep sensor during measurment aka stop fan.
+  void setSleep(bool value);
+  // define what to do at each stage of the sketch
+  void onSetup();
+  void onLoop(Child* child);
+  void onReceive(MyMessage* message);
+ protected:
+  SDS011* _sds;
+  float _p10 = 0.;
+  float _p25 = 0.;
+  int _rx_pin = 6;
+  int _tx_pin = 7;
+  bool _slp = true;
 };
 #endif
 

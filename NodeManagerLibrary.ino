@@ -2663,6 +2663,77 @@ int SensorMHZ19::_readCO2() {
 #endif
 
 /*
+   SensorSDS011
+*/
+#ifdef USE_SDS011
+SensorSDS011::SensorSDS011(NodeManager & node_manager, int rxpin, int txpin, int child_id): Sensor(node_manager, rxpin){
+  _name = "SDS011";
+  _rx_pin = rxpin;
+  _tx_pin = txpin;
+  children.allocateBlocks(2);
+  new ChildFloat(this, _node->getAvailableChildId(child_id), S_AIR_QUALITY, V_LEVEL, _name);
+  new ChildFloat(this, _node->getAvailableChildId(child_id+1), S_AIR_QUALITY, V_LEVEL, _name);
+}
+
+// Set sensor sleeping
+void SensorSDS011::setSleep(bool value){
+  _slp = value;
+}
+
+// what to do during setup
+void SensorSDS011::onSetup(){
+  _sds = new SDS011();
+  _sds->begin(_rx_pin, _tx_pin);
+  delay(2000);
+}
+
+// what to do during loop
+void SensorSDS011::onLoop(Child* child){
+  if (children.get(1) == child){
+    int error;
+
+    // Make sure sensor is running
+    _sds -> wakeup();
+    if (_slp){
+      // Powering up the fan needs some time.
+      delay(4000);
+    }
+
+    // Read the particle concentration values
+    error = _sds->read(&_p25,&_p10);
+
+    #if FEATURE_DEBUG == ON
+        Serial.println("Read Values from Feinstaubsensor:");
+        if (! error) {
+          Serial.print("P2.5: ");
+          Serial.println(_p25);
+          Serial.print("P10:  ");
+          Serial.println(_p10);
+        }
+        else{
+          Serial.println('Read Error');
+        }
+    #endif
+
+    // Stop fan to keep it clean
+    if (_slp){
+      _sds->sleep();
+    }
+
+    ((ChildFloat*)child)->setValueFloat(_p10);
+  }
+
+  if (children.get(2) == child){
+    ((ChildFloat*)child)->setValueFloat(_p25);
+  }
+}
+
+void SensorSDS011::onReceive(MyMessage* nessage){
+
+}
+#endif
+
+/*
    SensorAM2320
 */
 #ifdef USE_AM2320

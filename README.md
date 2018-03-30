@@ -67,6 +67,7 @@ SensorHCSR04             | 1     | USE_HCSR04         | HC-SR04 sensor, return t
 SensorMCP9808            | 1     | USE_MCP9808        | MCP9808 sensor, measure the temperature through the attached module                               | https://github.com/adafruit/Adafruit_MCP9808_Library
 SensorMQ                 | 1     | USE_MQ             | MQ sensor, return ppm of the target gas                                                           | -
 SensorMHZ19              | 1     | USE_MHZ19          | MH-Z19 CO2 sensor via UART (SoftwareSerial, default on pins 6(Rx) and 7(Tx)                       | -
+SensorSDS011             | 2     | USE_SDS011         | SDS011 air quality sensor, return concentrations of 2.5 and 10 micrometer particles.              | https://github.com/ricki-z/SDS011
 SensorAM2320             | 2     | USE_AM2320         | AM2320 sensors, return temperature/humidity based on the attached AM2320 sensor                   | https://github.com/thakshak/AM2320
 SensorTSL2561            | 1     | USE_TSL2561        | TSL2561 sensor, return light in lux                                                               | https://github.com/adafruit/TSL2561-Arduino-Library
 SensorPT100              | 1     | USE_PT100          | DFRobot Driver high temperature sensor, return the temperature from the attached PT100 sensor     | -
@@ -638,6 +639,12 @@ Each sensor class exposes additional methods.
 ~~~c
     // [101] set the voltageRef used to compare with analog measures
     void setVoltageRef(float value);
+~~~
+
+* SensorSDS011
+~~~c
+    // Sleep sensor after measurment. This powers down the fan but increases measurment time. (default: true)
+    void setSleep(bool value);
 ~~~
 
 * SensorDimmer
