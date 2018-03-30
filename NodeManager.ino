@@ -127,7 +127,7 @@ FEATURE_HOOKING             | OFF     | allow custom code to be hooked in the ou
  */
 
 // General settings
-#define SKETCH_NAME "NodeManager"
+#define SKETCH_NAME "MyMultisensor"
 #define SKETCH_VERSION "1.0"
 //#define MY_DEBUG
 //#define MY_NODE_ID 99
@@ -184,7 +184,7 @@ FEATURE_HOOKING             | OFF     | allow custom code to be hooked in the ou
 //#define MY_OTA_RETRY 2
 
 // Advanced settings
-#define MY_BAUD_RATE 9600
+#define MY_BAUD_RATE 115200
 //#define MY_SMART_SLEEP_WAIT_DURATION_MS 500
 #define MY_SPLASH_SCREEN_DISABLED
 //#define MY_DISABLE_RAM_ROUTING_TABLE_FEATURE
@@ -251,27 +251,27 @@ FEATURE_HOOKING             | OFF     | allow custom code to be hooked in the ou
 //#define USE_BATTERY
 //#define USE_SIGNAL
 //#define USE_CONFIGURATION
-//#define USE_ANALOG_INPUT
+#define USE_ANALOG_INPUT
 //#define USE_THERMISTOR
 //#define USE_ML8511
 //#define USE_ACS712
 //#define USE_DIGITAL_INPUT
 //#define USE_DIGITAL_OUTPUT
-//#define USE_DHT
+#define USE_DHT
 //#define USE_SHT21
 //#define USE_INTERRUPT
 //#define USE_DS18B20
 //#define USE_BH1750
 //#define USE_MLX90614
 //#define USE_BME280
-//#define USE_BMP085_180
+#define USE_BMP085_180
 //#define USE_BMP280
 //#define USE_SONOFF
 //#define USE_HCSR04
 //#define USE_MCP9808
 //#define USE_MQ
 //#define USE_MHZ19
-//#define USE_SDS011
+#define USE_SDS011
 //#define USE_AM2320
 //#define USE_TSL2561
 //#define USE_PT100
@@ -294,7 +294,7 @@ FEATURE_HOOKING             | OFF     | allow custom code to be hooked in the ou
  */
 
 // Enable/disable NodeManager's features
-#define FEATURE_DEBUG ON
+#define FEATURE_DEBUG OFF
 #define FEATURE_POWER_MANAGER OFF
 #define FEATURE_INTERRUPTS ON
 #define FEATURE_CONDITIONAL_REPORT OFF
@@ -325,7 +325,7 @@ NodeManager node;
 
 // Attached sensors
 //SensorAnalogInput analog(node,A0);
-//SensorLDR ldr(node,A0);
+SensorLDR ldr(node,A0);
 //SensorRain rain(node,A0);
 //SensorSoilMoisture soil(node,A0);
 //SensorThermistor thermistor(node,A0);
@@ -336,7 +336,7 @@ NodeManager node;
 //SensorRelay relay(node,6);
 //SensorLatchingRelay1Pin latching1pin(node,6);
 //SensorLatchingRelay2Pins latching2pins(node,6,7);
-//SensorDHT11 dht11(node,6);
+SensorDHT11 dht11(node,6);
 //SensorDHT22 dht22(node,6);
 //SensorSHT21 sht21(node);
 //SensorHTU21D htu21(node);
@@ -348,14 +348,14 @@ NodeManager node;
 //SensorMLX90614 mlx90614(node);
 //SensorBME280 bme280(node);
 //SensorBMP085 bmp085(node);
-//SensorBMP180 bmp180(node);
+SensorBMP180 bmp180(node);
 //SensorBMP280 bmp280(node);
 //SensorSonoff sonoff(node);
 //SensorHCSR04 hcsr04(node,6);
 //SensorMCP9808 mcp9808(node);
 //SensorMQ mq(node,A0);
 //SensorMHZ19 mhz19(node,6,7);
-//SensorSDS011 sds011(node,6,7);
+SensorSDS011 sds011(node,2,3);
 //SensorAM2320 am2320(node);
 //SensorTSL2561 tsl2561(node);
 //SensorPT100 pt100(node,6);
@@ -404,6 +404,7 @@ void before() {
   //analog.children.get(1)->setMinThreshold(40);
   // power all the nodes through dedicated pins
   //node.setPowerManager(power);
+  //sds011.setSleep(false);
   /*
   * Configure your sensors above
   */
