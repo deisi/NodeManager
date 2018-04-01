@@ -2684,7 +2684,7 @@ void SensorSDS011::setSleep(bool value){
 void SensorSDS011::onSetup(){
   _sds = new SDS011();
   _sds->begin(_rx_pin, _tx_pin);
-  delay(2000);
+  wait(2000);
 }
 
 // what to do during loop
@@ -2696,24 +2696,11 @@ void SensorSDS011::onLoop(Child* child){
     _sds -> wakeup();
     if (_slp){
       // Powering up the fan needs some time.
-      delay(4000);
+      wait(4000);
     }
 
     // Read the particle concentration values
     error = _sds->read(&_p25,&_p10);
-
-    #if FEATURE_DEBUG == ON
-        Serial.println("Read Values from Feinstaubsensor:");
-        if (! error) {
-          Serial.print("P2.5: ");
-          Serial.println(_p25);
-          Serial.print("P10:  ");
-          Serial.println(_p10);
-        }
-        else{
-          Serial.println('Read Error');
-        }
-    #endif
 
     // Stop fan to keep it clean
     if (_slp){
@@ -2726,10 +2713,22 @@ void SensorSDS011::onLoop(Child* child){
   if (children.get(2) == child){
     ((ChildFloat*)child)->setValueFloat(_p25);
   }
+
+  #if FEATURE_DEBUG == ON
+    Serial.print(_name);
+    Serial.print(F(" I="));
+    Serial.print(child->getChildId());
+    Serial.print(F(" p10="));
+    Serial.print(_p10);
+    Serial.print(F(" p25="));
+    Serial.print(_p25);
+  #endif
 }
 
-void SensorSDS011::onReceive(MyMessage* nessage){
-
+void SensorSDS011::onReceive(MyMessage* message){
+  Child* child = getChild(message->sensor);
+   if (child == nullptr) return;
+   if (message->getCommand() == C_REQ && message->type == child->getType()) onLoop(child);
 }
 #endif
 
